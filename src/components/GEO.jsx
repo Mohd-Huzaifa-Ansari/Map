@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState,useEffect } from 'react';
 import 'ol/ol.css';
 import Map from 'ol/Map';
 import View from 'ol/View';
@@ -9,9 +9,23 @@ import GeoJSON from 'ol/format/GeoJSON';
 import Feature from 'ol/Feature';
 import Circle from 'ol/geom/Circle';
 import { LineString } from 'ol/geom';
+import axios from 'axios';
+
+
 
 const GeoJSONMap = () => {
+  const [ geojsonObject, setparcelData] = useState({})
   useEffect(() => {
+   
+    axios.get('../../parcel.json')
+    .then( ( res )=>{ 
+      console.log(res.data)
+       setparcelData(res.data)
+      
+       console.log(`geojsonobject set hogya h ${geojsonObject}`)
+      } )
+    .catch( (e)=>{ console.log(e) })
+
     const image = new CircleStyle({
       radius: 10,
       fill: null,
@@ -92,196 +106,202 @@ const GeoJSONMap = () => {
       return styles[feature.getGeometry().getType()];
     };
 
-    const geojsonObject = {
-      type: 'FeatureCollection',
-      crs: {
-        type: 'name',
-        properties: {
-          name: 'EPSG:3857',
-        },
-      },
-      features: [
-        {
-          type: 'Feature',
-          geometry: {
-            type: 'Point',
-            coordinates: [0, 0],
-          },
-        },
+    // const geojsonObject = {
+    //   type: 'FeatureCollection',
+    //   crs: {
+    //     type: 'name',
+    //     properties: {
+    //       name: 'EPSG:3857',
+    //     },
+    //   },
+    //   features: [
+    //     {
+    //       type: 'Feature',
+    //       geometry: {
+    //         type: 'Point',
+    //         coordinates: [0, 0],
+    //       },
+    //     },
 
-        {
-          type: 'Feature',
-          geometry: {
-            type: 'LineString',
-            coordinates: [
-              [4e6, -2e6],
-              [8e6, 2e6],
-            ],
-          },
-        },
-           {
-            type:'Feature',
-            geometry:{
-                type:'LineString',
-                coordinates: [ [ 100, 200],[ 5e6,4e6],[30000,40000] ]
-            }
-           }
-        ,
-        {
-          type: 'Feature',
-          geometry: {
-            type: 'LineString',
-            coordinates: [
-              [4e6, 2e6],
-              [8e6, -2e6],
-            ],
-          },
-        },
-        {
-          type: 'Feature',
-          geometry: {
-            type: 'Polygon',
-            coordinates: [
-              [
-                [-5e6, -1e6],
-                [-3e6, -1e6],
-                [-4e6, 1e6],
-                [-5e6, -1e6],
-              ],
-            ],
-          },
-        },
-        // add new polygon practice 
-        {
-            type:'Feature',
-            geometry:{
-                type: 'Polygon',
-                coordinates:[
-                    [
-                        [-4e6,-2e6],[-300,-4000],[-4000,-9000], [-2e6,-2e6]
-                    ]
-                ]
-            }
-        },
-        {
-          type: 'Feature',
-          geometry: {
-            type: 'MultiLineString',
-            coordinates: [
-              [
-                [-1e6, -7.5e5],
-                [-1e6, 7.5e5],
-              ],
-              [
-                [1e6, -7.5e5],
-                [1e6, 7.5e5],
-              ],
-              [
-                [-7.5e5, -1e6],
-                [7.5e5, -1e6],
-              ],
-              [
-                [-7.5e5, 1e6],
-                [7.5e5, 1e6],
-              ],
-            ],
-          },
-        },
-        {
-          type: 'Feature',
-          geometry: {
-            type: 'MultiPolygon',
-            coordinates: [
-              [
-                // [
-                //   [-5e6, 6e6],
-                //   [-3e6, 6e6],
-                //   [-3e6, 8e6],
-                //   [-5e6, 8e6],
-                //   [-5e6, 6e6],
-                // ],
-              ],
-              [
-                [
-                  [-2e6, 6e6],
-                  [0, 6e6],
-                  [0, 8e6],
-                  [-2e1, 8e6],
-                  [-2e6, 6e6],
-                ],
-              ],
-              [
-                [
-                  [1e6, 6e6],
-                  [3e6, 6e6],
-                  [3e6, 8e6],
-                  [1e6, 8e6],
-                  [1e6, 6e6],
-                ],
-              ],
-              [
-                [
-                  [1e5, 4e6],
-                  [3e6, 6e6],
-                  [3e6, 8e6],
-                  [1e6, 8e6],
-                  [1e5, 4e6],
-                ],
-              ],
-            ],
-          },
-        },
-        {
-          type: 'Feature',
-          geometry: {
-            type: 'GeometryCollection',
-            geometries: [
-              {
-                type: 'LineString',
-                coordinates: [
-                  [-5e6, -5e6],
-                  [0, -5e6],
-                ],
-              },
-              {
-                type: 'Point',
-                coordinates: [4e6, -5e6],
-              },
-              {
-                type: 'Polygon',
-                coordinates: [
-                  [
-                    [1e6, -6e6],
-                    [3e6, -6e6],
-                    [2e6, -4e6],
-                    [1e6, -6e6],
-                  ],
-                ],
-              },
-            ],
-          },
-        },
-      ],
-    };
+    //     {
+    //       type: 'Feature',
+    //       geometry: {
+    //         type: 'LineString',
+    //         coordinates: [
+    //           [4e6, -2e6],
+    //           [8e6, 2e6],
+    //         ],
+    //       },
+    //     },
+    //        {
+    //         type:'Feature',
+    //         geometry:{
+    //             type:'LineString',
+    //             coordinates: [ [ 100, 200],[ 5e6,4e6],[30000,40000] ]
+    //         }
+    //        }
+    //     ,
+    //     {
+    //       type: 'Feature',
+    //       geometry: {
+    //         type: 'LineString',
+    //         coordinates: [
+    //           [4e6, 2e6],
+    //           [8e6, -2e6],
+    //         ],
+    //       },
+    //     },
+    //     {
+    //       type: 'Feature',
+    //       geometry: {
+    //         type: 'Polygon',
+    //         coordinates: [
+    //           [
+    //             [-5e6, -1e6],
+    //             [-3e6, -1e6],
+    //             [-4e6, 1e6],
+    //             [-5e6, -1e6],
+    //           ],
+    //         ],
+    //       },
+    //     },
+    //     // add new polygon practice 
+    //     {
+    //         type:'Feature',
+    //         geometry:{
+    //             type: 'Polygon',
+    //             coordinates:[
+    //                 [
+    //                     [-4e6,-2e6],[-300,-4000],[-4000,-9000], [-2e6,-2e6]
+    //                 ]
+    //             ]
+    //         }
+    //     },
+    //     {
+    //       type: 'Feature',
+    //       geometry: {
+    //         type: 'MultiLineString',
+    //         coordinates: [
+    //           [
+    //             [-1e6, -7.5e5],
+    //             [-1e6, 7.5e5],
+    //           ],
+    //           [
+    //             [1e6, -7.5e5],
+    //             [1e6, 7.5e5],
+    //           ],
+    //           [
+    //             [-7.5e5, -1e6],
+    //             [7.5e5, -1e6],
+    //           ],
+    //           [
+    //             [-7.5e5, 1e6],
+    //             [7.5e5, 1e6],
+    //           ],
+    //         ],
+    //       },
+    //     },
+    //     {
+    //       type: 'Feature',
+    //       geometry: {
+    //         type: 'MultiPolygon',
+    //         coordinates: [
+    //           [
+    //             // [
+    //             //   [-5e6, 6e6],
+    //             //   [-3e6, 6e6],
+    //             //   [-3e6, 8e6],
+    //             //   [-5e6, 8e6],
+    //             //   [-5e6, 6e6],
+    //             // ],
+    //           ],
+    //           [
+    //             [
+    //               [-2e6, 6e6],
+    //               [0, 6e6],
+    //               [0, 8e6],
+    //               [-2e1, 8e6],
+    //               [-2e6, 6e6],
+    //             ],
+    //           ],
+    //           [
+    //             [
+    //               [1e6, 6e6],
+    //               [3e6, 6e6],
+    //               [3e6, 8e6],
+    //               [1e6, 8e6],
+    //               [1e6, 6e6],
+    //             ],
+    //           ],
+    //           [
+    //             [
+    //               [1e5, 4e6],
+    //               [3e6, 6e6],
+    //               [3e6, 8e6],
+    //               [1e6, 8e6],
+    //               [1e5, 4e6],
+    //             ],
+    //           ],
+    //         ],
+    //       },
+    //     },
+    //     {
+    //       type: 'Feature',
+    //       geometry: {
+    //         type: 'GeometryCollection',
+    //         geometries: [
+    //           {
+    //             type: 'LineString',
+    //             coordinates: [
+    //               [-5e6, -5e6],
+    //               [0, -5e6],
+    //             ],
+    //           },
+    //           {
+    //             type: 'Point',
+    //             coordinates: [4e6, -5e6],
+    //           },
+    //           {
+    //             type: 'Polygon',
+    //             coordinates: [
+    //               [
+    //                 [1e6, -6e6],
+    //                 [3e6, -6e6],
+    //                 [2e6, -4e6],
+    //                 [1e6, -6e6],
+    //               ],
+    //             ],
+    //           },
+    //         ],
+    //       },
+    //     },
+    //   ],
+    // };
 
+
+    
     const vectorSource = new VectorSource({
-      features: new GeoJSON().readFeatures(geojsonObject),
+      features: new GeoJSON().readFeatures(geojsonObject, {
+        dataProjection: 'EPSG:4326',
+        featureProjection: 'EPSG:3857'
+        }),
+      
     });
 
    // create a new line and add into the feature
 
-   const Linee = [ 
+  //  const Linee = [ 
    
-    [1e2,1e7], // start point 
-    [2e6,0],  // mid point
-    [3e5,0]  // end point 
+  //   [1e2,1e7], // start point 
+  //   [2e6,0],  // mid point
+  //   [3e5,0]  // end point 
     
-  ];
-   vectorSource.addFeature( new Feature( new LineString(Linee)))
+  // ];
+  //  vectorSource.addFeature( new Feature( new LineString(Linee)))
 
    // [it contains centre of circle ], defines the radius
 
- vectorSource.addFeature( new Feature( new Circle([2e2,5e6],1e6)))
+//  vectorSource.addFeature( new Feature( new Circle([2e2,5e6],1e6)))
 
     const vectorLayer = new VectorLayer({
       source: vectorSource,
